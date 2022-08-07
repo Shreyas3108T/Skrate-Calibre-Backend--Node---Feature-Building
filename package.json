@@ -1,0 +1,20 @@
+{
+  "name": "task",
+  "version": "1.0.0",
+  "description": "Skrate Calibre Backend (Node) Feature Building Task (round 2)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shreyas3108T/Skrate-Calibre-Backend--Node---Feature-Building.git"
+  },
+  "author": "shreyas tiwari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shreyas3108T/Skrate-Calibre-Backend--Node---Feature-Building/issues"
+  },
+  "homepage": "https://github.com/Shreyas3108T/Skrate-Calibre-Backend--Node---Feature-Building#readme"
+}
