@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/tickets")
 const middlewares = require("../middlewares/tickets")
-const {body,query} = require("express-validator")
+const {body} = require("express-validator")
 
 router.post("/users/new",
 [body("username").notEmpty().withMessage("username is required"),
@@ -13,9 +13,10 @@ middlewares.checkRole,
  controller.newUser
  )
 
-// router.post("/tickets/new"
-// /*middlewares*/
-//  /*controller*/)
+router.post("/tickets/new",
+middlewares.auth,
+middlewares.checkAdmin,
+controller.newTicket)
 
 // router,get("/ticket/:param"
 // /*middlewares*/
