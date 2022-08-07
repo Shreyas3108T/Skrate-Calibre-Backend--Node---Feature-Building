@@ -1,8 +1,10 @@
 const router = require("express").Router();
+const {controller} = require("../controllers/tickets")
 
 router.post("/users/new",
 /*middlewares*/
- /*controller*/)
+ controller.newUser()
+ )
 
 router.post("/tickets/new"
 /*middlewares*/
