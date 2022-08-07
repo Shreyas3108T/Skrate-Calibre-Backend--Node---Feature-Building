@@ -129,7 +129,6 @@ class tickets{
             }
             if (req.role == "admin" || req.user == ticket.assignedTo){
                 const tickets = await ticketModel.find({assignedTo:req.user,status:"open"})
-                console.log(tickets)
                 var bool = false
                 var higherTasks =[]
                 tickets.forEach((element)=>{
