@@ -29,10 +29,12 @@ class ticketMiddlewares{
     }
     
     async auth(req,res,next){
+        try{
         const accessToken = req.headers.authorization.split(" ")[1]
         if(!accessToken){
             return res.status(401).json({Access:"No bearer token provided"})
         }
+        try{
         const userData = jwt.verify(accessToken,accessTokenSecret)
         const user = await UserModel.find({username:userData.username})
         if(user.length == 0){
@@ -40,7 +42,14 @@ class ticketMiddlewares{
         }
         req.role = userData.role
         return next()
-
+        }
+        catch(error){
+            return res.status(401).json({error:error,message:"problem with token "})
+        }
+    }
+    catch(error){
+        return res.status(501).json({error:"internal server error"})
+    }
     }
 
     checkAdmin(req,res,next){

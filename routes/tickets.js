@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/tickets")
 const middlewares = require("../middlewares/tickets")
-const {body} = require("express-validator")
+const {body,query,param} = require("express-validator")
 
 router.post("/users/new",
 [body("username").notEmpty().withMessage("username is required"),
@@ -18,9 +18,13 @@ middlewares.auth,
 middlewares.checkAdmin,
 controller.newTicket)
 
-// router,get("/ticket/:param"
-// /*middlewares*/
-//  /*controller*/)
+router.get("/tickets/:params",
+middlewares.auth,
+controller.ticketParams)
+
+router.get("/tickets/",
+middlewares.auth,
+controller.ticketParams)
 
 // router.post("/tickets/markAsClosed"
 // /*middlewares*/
