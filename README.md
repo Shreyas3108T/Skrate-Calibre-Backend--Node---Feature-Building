@@ -32,7 +32,7 @@ where Param can be
 
 * <b> To GET All the tickets </b>
 
-https://fast-citadel-03015.herokuapp.com/tickets/All
+`https://fast-citadel-03015.herokuapp.com/tickets/All`
 
 *  <b> To GET All the tickets with status open or close </b>
 
