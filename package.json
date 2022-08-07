@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/Shreyas3108T/Skrate-Calibre-Backend--Node---Feature-Building/issues"
   },
-  "homepage": "https://github.com/Shreyas3108T/Skrate-Calibre-Backend--Node---Feature-Building#readme"
+  "homepage": "https://github.com/Shreyas3108T/Skrate-Calibre-Backend--Node---Feature-Building#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.5.1"
+  }
 }
