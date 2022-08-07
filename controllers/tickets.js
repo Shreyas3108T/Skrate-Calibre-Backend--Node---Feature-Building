@@ -26,16 +26,50 @@ class tickets{
 
     async newTicket(req,res){
         try{
-        const {title,description} = req.body
-        const newTicket = new ticketModel({
+        const {title,description,assignedTo,priority} = req.body
+        var user
+        var newTicket
+        if(!assignedTo && !priority){
+            newTicket = new ticketModel({
+                title:title,
+                description:description,
+            })
+        }
+        if(!priority && assignedTo){
+            user = await UserModel.findOne({username:assignedTo,role:"employee"})
+            if(user == null){
+                return res.status(401).json({error:"no such username found"})
+            }
+            newTicket = new ticketModel({
+                title:title,
+                description:description,
+                assignedTo:assignedTo
+            })
+        }
+        if(priority && !assignedTo){
+            newTicket = new ticketModel({
+                title:title,
+                description:description,
+                priority:priority
+            })
+        }
+        else{
+        user = await UserModel.findOne({username:assignedTo,role:"employee"})
+        if(user == null){
+            return res.status(401).json({error:"no such username found"})
+        }
+        newTicket = new ticketModel({
             title:title,
-            description:description
-        })
+            description:description,
+            assignedTo:assignedTo,
+            priority:priority
+        })}
+
         const ticket = await newTicket.save()
         res.status(200).json({id:ticket.id})
         }
         catch(error){
-            return res.status(501).json({error:"Internal Server Error"}) 
+            return res.status(501).json({error:"Internal Server Error",errors:error}) 
         }
     }
 
@@ -85,19 +119,21 @@ class tickets{
 
     async ticketMarkAsClosed(req,res){
         try{
-            const priority = {"low":1,"medium":2,"high":3}
+            const priority = {'low':1,'medium':2,'high':3}
             const {ticketID}= req.body
             try{
             const ticket = await ticketModel.findById(ticketID)
+            const k =ticket.priority
             if(ticket.status == 'close'){
                 return res.status(409).json({message:"ticket already closed"})
             }
             if (req.role == "admin" || req.user == ticket.assignedTo){
                 const tickets = await ticketModel.find({assignedTo:req.user})
+                console.log(tickets)
                 var bool = false
                 var higherTasks =[]
                 tickets.forEach((element)=>{
-                    if(priority[element.priority] >priority[ticket.priority]){
+                    if(priority[element.priority] >priority[k]){
                         bool = true
                         higherTasks.push(element)
                     }
@@ -111,18 +147,18 @@ class tickets{
             return res.status(401).json({message:"unauthorised"})
             }
             catch(error){
-                return res.status(401).json({message:"error with ticketId"})
+                return res.status(401).json({message:"error with ticketId",error:error})
             }
         }
         catch(error){
-            return res.status(501).json({message:"internal sever error"})
+           return res.status(501).json({message:"internal sever error"}) //62efa85e51cf982024df0730
         }
     }
 
     async ticketdelete(req,res){
         try{
             const {ticketID}= req.body
-            
+
             const deletedticket = await ticketModel.findByIdAndDelete(ticketID)
             if(!deletedticket){
                 return res.status(404).json({message:"no ticket found"})
