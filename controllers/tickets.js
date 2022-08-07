@@ -128,7 +128,7 @@ class tickets{
                 return res.status(409).json({message:"ticket already closed"})
             }
             if (req.role == "admin" || req.user == ticket.assignedTo){
-                const tickets = await ticketModel.find({assignedTo:req.user})
+                const tickets = await ticketModel.find({assignedTo:req.user,status:"open"})
                 console.log(tickets)
                 var bool = false
                 var higherTasks =[]
