@@ -40,6 +40,7 @@ class ticketMiddlewares{
         if(user.length == 0){
             return res.status(409).json({Access:"Invalid token"})
         }
+        req.user = userData.username
         req.role = userData.role
         return next()
         }

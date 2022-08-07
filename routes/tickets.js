@@ -14,6 +14,9 @@ middlewares.checkRole,
  )
 
 router.post("/tickets/new",
+[body("title").notEmpty().withMessage("title is required"),
+body("description").notEmpty().withMessage("description is required")],
+middlewares.checkInput,
 middlewares.auth,
 middlewares.checkAdmin,
 controller.newTicket)
@@ -26,15 +29,21 @@ router.get("/tickets/",
 middlewares.auth,
 controller.ticketParams)
 
-// router.post("/tickets/markAsClosed"
-// /*middlewares*/
-//  /*controller*/)
+router.post("/tickets/markAsClosed",
+[body("ticketID").notEmpty().withMessage("ticketID is required")],
+middlewares.checkInput,
+middlewares.auth,
+controller.ticketMarkAsClosed
+)
 
-// router.post("/tickets/delete"
-// /*middlewares*/
-//  /*controller*/)
+router.post("/tickets/delete",
+[body("ticketID").notEmpty().withMessage("ticketID is required")],
+middlewares.checkInput,
+middlewares.auth,
+middlewares.checkAdmin,
+controller.ticketdelete
+)
 
 
 module.exports = router;
 
-// link https://fast-citadel-03015.herokuapp.com/

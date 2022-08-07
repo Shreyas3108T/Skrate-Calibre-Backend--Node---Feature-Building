@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { off } = require("../database/db");
 const UserModel = require("../database/db")
 const ticketModel = require("../database/ticketsModel")
 const accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
@@ -79,6 +80,56 @@ class tickets{
         }
         catch(error){
             return res.status(501).json({error:"internal server error"})
+        }
+    }
+
+    async ticketMarkAsClosed(req,res){
+        try{
+            const priority = {"low":1,"medium":2,"high":3}
+            const {ticketID}= req.body
+            try{
+            const ticket = await ticketModel.findById(ticketID)
+            if(ticket.status == 'close'){
+                return res.status(409).json({message:"ticket already closed"})
+            }
+            if (req.role == "admin" || req.user == ticket.assignedTo){
+                const tickets = await ticketModel.find({assignedTo:req.user})
+                var bool = false
+                var higherTasks =[]
+                tickets.forEach((element)=>{
+                    if(priority[element.priority] >priority[ticket.priority]){
+                        bool = true
+                        higherTasks.push(element)
+                    }
+                })
+                if(bool){
+                    return res.status(401).json({message:"A higher priority task remains to be closed",data:higherTasks})
+                }
+                const ticket = await ticketModel.findByIdAndUpdate(ticketID,{status:"close"})
+                return res.status(200).json({message:"ticket closed succesfully"})  
+            }
+            return res.status(401).json({message:"unauthorised"})
+            }
+            catch(error){
+                return res.status(401).json({message:"error with ticketId"})
+            }
+        }
+        catch(error){
+            return res.status(501).json({message:"internal sever error"})
+        }
+    }
+
+    async ticketdelete(req,res){
+        try{
+            const {ticketID}= req.body
+            
+            const deletedticket = await ticketModel.findByIdAndDelete(ticketID)
+            if(!deletedticket){
+                return res.status(404).json({message:"no ticket found"})
+            }
+            return res.status(200).json({message:"ticket deleted"})
+        }catch(error){ 
+            return res.status(501).json({message:"internal sever error"})
         }
     }
 }
